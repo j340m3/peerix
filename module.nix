@@ -152,13 +152,13 @@ in
         ];
       };
       extraOptions = 
-      /* (lib.mkIf (cfg.globalCacheTTL != null) ''
+      (lib.mkIf (cfg.globalCacheTTL != null) ''
         narinfo-cache-negative-ttl = ${toString cfg.globalCacheTTL}
         narinfo-cache-positive-ttl = ${toString cfg.globalCacheTTL}
-      '') +  */ # FIXME: Include both please
-      ''
+      '') # FIXME: Include both please
+      /*''
       trusted-public-keys = !include ${toString cfg.publicKeyFile.path}
-      '';
+      ''*/;
     };
     
 
