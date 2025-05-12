@@ -156,7 +156,7 @@ in
         narinfo-cache-negative-ttl = ${toString cfg.globalCacheTTL}
         narinfo-cache-positive-ttl = ${toString cfg.globalCacheTTL}
       '') +  */ # FIXME: Include both please
-      lib.mkIf (cfg.publicKeyFile != null) ''
+      ''
       trusted-public-keys = !include ${toString cfg.publicKeyFile.path}
       '';
     };
