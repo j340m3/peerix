@@ -151,10 +151,12 @@ in
           (lib.mkIf (cfg.publicKey != null) cfg.publicKey)
         ];
       };
-      extraOptions = (lib.mkIf (cfg.globalCacheTTL != null) ''
+      extraOptions = 
+      /* (lib.mkIf (cfg.globalCacheTTL != null) ''
         narinfo-cache-negative-ttl = ${toString cfg.globalCacheTTL}
         narinfo-cache-positive-ttl = ${toString cfg.globalCacheTTL}
-      '') + (lib.mkIf (cfg.publicKeyFile != null) ''
+      '') +  */ # FIXME: Include both please
+      (lib.mkIf (cfg.publicKeyFile != null) ''
       trusted-public-keys = !include ${cfg.publicKeyFile}
       '');
     };
