@@ -147,15 +147,18 @@ in
           "http://127.0.0.1:12304/"
         ];
         trusted-public-keys = [
-          (lib.mkIf (cfg.publicKeyFile != null) (builtins.readFile cfg.publicKeyFile))
+          #(lib.mkIf (cfg.publicKeyFile != null) (builtins.readFile cfg.publicKeyFile))
           (lib.mkIf (cfg.publicKey != null) cfg.publicKey)
         ];
       };
-      extraOptions = lib.mkIf (cfg.globalCacheTTL != null) ''
+      extraOptions = (lib.mkIf (cfg.globalCacheTTL != null) ''
         narinfo-cache-negative-ttl = ${toString cfg.globalCacheTTL}
         narinfo-cache-positive-ttl = ${toString cfg.globalCacheTTL}
-      '';
+      '') + (lib.mkIf (cfg.publicKeyFile != null) ''
+      trusted-public-keys = !include ${cfg.publicKeyFile}
+      '');
     };
+    
 
     networking.firewall = lib.mkIf (cfg.openFirewall) {
       allowedTCPPorts = [ 12304 ];
