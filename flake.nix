@@ -12,7 +12,7 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }: {
     nixosModules.peerix = import ./module.nix;
-    overlay = import ./overlay.nix { inherit self; };
+    overlays.default = import ./overlay.nix { inherit self; };
   } // flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
@@ -39,9 +39,9 @@
         '';
       };
 
-      defaultPackage = self.packages.${system}.peerix;
+      packages.default = self.packages.${system}.peerix;
 
-      devShell = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           nix-serve
           niv
@@ -49,6 +49,21 @@
         ];
       };
 
-      defaultApp = { type = "app"; program = "${self.packages.${system}.peerix}/bin/peerix"; };
+      apps.default = { 
+        type = "app"; 
+        program = "${self.packages.${system}.peerix}/bin/peerix"; 
+        meta = with nixpkgs.lib; {
+            description = "Peerix is a peer-to-peer binary cache for nix derivations.";
+            longDescription = ''
+              Peerix implements a nix binary cache. When the nix package manager queries peerix, peerix
+              will ask the network if any other peerix instances hold the package, and if some other instance
+              holds the derivation, it will download the derivation from that instance.
+            '';
+            homepage = "https://github.com/j340m3/peerix";
+            license = licenses.gpl3Only;
+            maintainers = with maintainers; [  ]; #TODO
+            platforms = platforms.all;
+          };
+        };
     });
 }
