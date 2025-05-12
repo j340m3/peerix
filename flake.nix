@@ -16,7 +16,7 @@
   } // flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
-      python = pkgs.python39;
+      python = pkgs.python3;
       packages = map (pkg: python.pkgs.${pkg}) (builtins.filter (v: builtins.isString v && (builtins.stringLength v) > 0) (builtins.split "\n" (builtins.readFile ./requirements.txt)));
     in {
       packages = rec {
